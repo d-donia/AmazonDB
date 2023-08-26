@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Prime Media Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+        }
+        .header {
+            background-color: #354c69;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 6rem auto;
+            padding: 2rem;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .btn {
+            display: block;
+            background-color: #00A8E1;
+            color: white;
+            padding: 1rem 2rem;
+            margin: 0.5rem 2rem;
+            text-align: center; /* Centered text */
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0094C6;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        .btn-column {
+            flex: 0 0 calc(50% - 1rem);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="amazon_prime_logo.png" alt="Amazon Prime Logo">
+        <h1>Welcome to Media Manager</h1>
+    </div>
+    <div class="container">
+        <h2>Manage the media collection</h2>
+        <p>Organize and explore Amazon Prime films and TV series.</p>
+        <div class="btn-container">
+            <div class="btn-column">
+                <a href="/insert" class="btn">Insert New Media</a>
+                <a href="/delete" class="btn">Delete Media</a>
+            </div>
+            <div class="btn-column">
+                <a href="/modify" class="btn">Modify Media</a>
+                <a href="/queries" class="btn">Custom Queries</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
