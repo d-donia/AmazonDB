@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media List - Amazon Prime Media Manager</title>
+    <style>
+        /* Include the shared style */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+        }
+        .header {
+            background-color: #354c69;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .card {
+            position: relative;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(180deg, #d0dff9, #b6c9dc);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        .card p {
+            margin: 0.2rem 0;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        .card .info {
+            font-size: 0.8rem;
+            color: #555;
+        }
+        .card .details {
+            display: none;
+        }
+        .arrow-btn {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #4d6f99;
+        }
+        .arrow {
+            width: 12px;
+            height: 12px;
+            margin-right: 0.3rem;
+            fill: currentColor;
+        }
+        .card-buttons {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+        }
+        .edit-btn,
+        .delete-btn {
+            background-color: #4d6f99;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.2rem 0.5rem;
+            margin-right: 0.3rem;
+            cursor: pointer;
+        }
+        .edit-btn:hover,
+        .delete-btn:hover {
+            background-color: #354c69;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="../static/logo.png" alt="Amazon Prime Logo" width="150">
+        <h1>Welcome to Media Manager</h1>
+    </div>
+    <div class="container">
+        <h2>Media List</h2>
+        {% for media in medias %}
+            <div class="card">
+                <div class="card-buttons">
+                    <button class="edit-btn" onclick="editMedia('{{ media.id }}')">Edit</button>
+                    <button class="delete-btn" onclick="deleteMedia('{{ media.id }}')">Delete</button>
+                </div>
+                <h3>{{ media.title }}</h3>
+                <p><strong>Type:</strong> {{ media.type }}</p>
+                <p><strong>Genre:</strong> {{ media.genre }}</p>
+                <p><strong>Director:</strong> {{ media.director }}</p>
+                <p><strong>Release Year:</strong> {{ media.releaseYear }}</p>
+                <button class="arrow-btn" onclick="toggleDetails(this)">
+                    <svg class="arrow" viewBox="0 0 24 24">
+                        <path d="M12 15.41L6.71 10.12a1 1 0 1 0-1.42 1.42l6 6a1 1 0 0 0 1.42 0l6-6a1 1 0 0 0-1.42-1.42L12 15.41z"/>
+                    </svg>
+                    More info
+                </button>
+                <div class="details">
+                    <!-- ... (additional details) ... -->
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        function toggleDetails(button) {
+            // ... (toggle details code) ...
+        }
+
+        function editMedia(id) {
+            // Implement edit functionality here using the media id
+        }
+
+        function deleteMedia(id) {
+            // Implement delete functionality here using the media id
+        }
+    </script>
+</body>
+</html>

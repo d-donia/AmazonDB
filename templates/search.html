@@ -100,10 +100,10 @@
 
         <!-- First Form Container -->
         <div class="form-container">
-            <form action="/search" method="GET" class="form-row">
+            <form action="/view" method="GET" class="form-row">
                 <div class="column">
                     <label for="title">Title:</label>
-                    <input type="text" id="title" name="title">
+                    <input type="text" id="title" name="title" required>
                 </div>
                 <button type="submit" class="btn" style="margin-right: 2rem;">Search</button>
             </form>
@@ -111,17 +111,17 @@
 
         <!-- Second Form Container -->
         <div class="form-container">
-            <form action="/search" method="GET" class="form-row">
+            <form action="/view" method="GET" class="form-row">
                 <div class="column">
                     <label for="type">Type:</label>
-                    <select id="type" name="type">
+                    <select id="type" name="type" required>
                         <option value="movie">Movie</option>
                         <option value="tvseries">TV Series</option>
                     </select>
                 </div>
                 <div class="column">
                     <label for="genre">Genre:</label>
-                    <input type="text" id="genre" name="genre">
+                    <input type="text" id="genre" name="genre" required>
                 </div>
                 <button type="submit" class="btn" style="margin-right: 2rem;">Search</button>
             </form>
@@ -129,18 +129,18 @@
 
         <!-- Third Form Container -->
         <div class="form-container">
-            <form action="/search" method="GET">
+            <form action="/view" method="GET">
                 <div class="form-row-container">
                     <div class="column third-form">
                         <label for="thirdType1">Type:</label>
-                        <select id="thirdType1" name="thirdType1">
+                        <select id="thirdType1" name="thirdType1" required>
                             <option value="movie">Movie</option>
                             <option value="tvseries">TV Series</option>
                         </select>
                     </div>
                     <div class="column third-form">
                         <label for="thirdReleaseYear1">Release Year:</label>
-                        <input type="number" id="thirdReleaseYear1" name="thirdReleaseYear1">
+                        <input type="number" id="thirdReleaseYear1" name="thirdReleaseYear1" required>
                     </div>
                 </div>
                 <div class="form-row-container">
@@ -149,14 +149,14 @@
                 <div class="form-row-container">
                     <div class="column third-form">
                         <label for="thirdType2">Type:</label>
-                        <select id="thirdType2" name="thirdType2">
+                        <select id="thirdType2" name="thirdType2" required>
                             <option value="movie">Movie</option>
                             <option value="tvseries">TV Series</option>
                         </select>
                     </div>
                     <div class="column third-form">
                         <label for="thirdReleaseYear2">Release Year:</label>
-                        <input type="number" id="thirdReleaseYear2" name="thirdReleaseYear2">
+                        <input type="number" id="thirdReleaseYear2" name="thirdReleaseYear2" required>
                     </div>
                 </div>
             </form>
