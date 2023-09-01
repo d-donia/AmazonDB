@@ -93,6 +93,45 @@
         .delete-btn:hover {
             background-color: #354c69;
         }
+        .pagination {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+        }
+
+        .pagination-list {
+            display: flex;
+        }
+
+        .page-item {
+            margin: 0 0.2rem;
+        }
+
+        .page-link {
+            text-decoration: none;
+            color: #354c69;
+            font-weight: bold;
+        }
+
+        .page-link.active {
+            color: #00A8E1;
+            font-weight: bold;
+        }
+
+        .page-link.active-link {
+            color: #00A8E1; /* Adjust the color as needed */
+            font-weight: bold; /* Add font-weight if desired */
+        }
+
+        .page-link.active:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            list-style: none;
+        }
     </style>
 </head>
 <body>
@@ -117,17 +156,84 @@
                     <svg class="arrow" viewBox="0 0 24 24">
                         <path d="M12 15.41L6.71 10.12a1 1 0 1 0-1.42 1.42l6 6a1 1 0 0 0 1.42 0l6-6a1 1 0 0 0-1.42-1.42L12 15.41z"/>
                     </svg>
-                    More info
+                    <span class="more-info-text">More info</span>
                 </button>
                 <div class="details">
-                    <!-- ... (additional details) ... -->
+                    <p><strong>Description:</strong> {{ media.description }}</p>
+                    <p><strong>Cast:</strong> {{ media.cast }}</p>
+                    <p><strong>Country:</strong> {{ media.country }}</p>
+                    <p><strong>Rating:</strong> {{ media.rating }}</p>
+                    {% if media.type == "movie" %}
+                        <p><strong>Duration:</strong> {{ media.duration }} minutes</p>
+                    {% elif media.type == "tvseries" %}
+                        <p><strong>Seasons:</strong> {{ media.seasons }}</p>
+                    {% endif %}
+                    <p class="info"><strong>Date Added:</strong> {{ media.dateAdded }}</p>
                 </div>
             </div>
         {% endfor %}
+
+        <!-- Pagination -->
+         <div class="pagination">
+            <ul class="pagination-list">
+                {% if page > 1 %}
+                    <li class="page-item shaded">
+                        <a class="page-link" href="?page={{ page - 1 }}">&lt; </a>
+                    </li>
+                {% endif %}
+
+                {% if total_pages <= 4 %}
+                    {% for p in range(1, total_pages + 1) %}
+                        <li class="page-item{% if p == page %} active{% endif %}">
+                            <a class="page-link{% if p == page %} active-link{% endif %}" href="?page={{ p }}">{{ p }}</a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    {% if page <= 2 %}
+                        {% for p in range(1, 5) %}
+                            <li class="page-item{% if p == page %} active{% endif %}">
+                                <a class="page-link{% if p == page %} active-link{% endif %}" href="?page={{ p }}">{{ p }}</a>
+                            </li>
+                        {% endfor %}
+                    {% elif page >= total_pages - 1 %}
+                        {% for p in range(total_pages - 3, total_pages + 1) %}
+                            <li class="page-item{% if p == page %} active{% endif %}">
+                                <a class="page-link{% if p == page %} active-link{% endif %}" href="?page={{ p }}">{{ p }}</a>
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        {% for p in range(page - 1, page + 3) %}
+                            <li class="page-item{% if p == page %} active{% endif %}">
+                                <a class="page-link{% if p == page %} active-link{% endif %}" href="?page={{ p }}">{{ p }}</a>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+
+                {% if page < total_pages %}
+                    <li class="page-item shaded">
+                        <a class="page-link" href="?page={{ page + 1 }}"> &gt;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
     <script>
         function toggleDetails(button) {
-            // ... (toggle details code) ...
+            var card = button.parentNode;
+            var details = card.querySelector('.details');
+            var arrow = card.querySelector('.arrow');
+            var moreInfoText = card.querySelector('.more-info-text');
+
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+                moreInfoText.textContent = 'More info';
+            } else {
+                details.style.display = 'block';
+                arrow.style.transform = 'rotate(180deg)';
+                moreInfoText.textContent = 'Less info';
+            }
         }
 
         function editMedia(id) {
