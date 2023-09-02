@@ -144,7 +144,7 @@
         {% for media in medias %}
             <div class="card">
                 <div class="card-buttons">
-                    <button class="edit-btn" onclick="editMedia('{{ media.id }}')">Edit</button>
+                    <button class="edit-btn" id="btn{{media.title}}" onclick="editMedia('{{media.title}}')">Edit</button>
                     <button class="delete-btn" onclick="deleteMedia('{{ media.id }}')">Delete</button>
                 </div>
                 <h3>{{ media.title }}</h3>
@@ -170,6 +170,59 @@
                     {% endif %}
                     <p class="info"><strong>Date Added:</strong> {{ media.dateAdded }}</p>
                 </div>
+                <form id="editForm{{ media.title }}" action="/show-edit" method="POST" style="display: none">
+                    <!-- Include the input fields for editing -->
+
+                    <!-- Form Section 1 -->
+                    <div>
+                        <label for="title">Title:</label>
+                        <input type="text" id="title" name="title" value="{{ media.title }}" required>
+                    </div>
+                    <div>
+                        <label for="type">Type:</label>
+                        <select id="type" name="type">
+                            <option value="movie" {% if media.type == "movie" %}selected{% endif %}>Movie</option>
+                            <option value="tvseries" {% if media.type == "tvseries" %}selected{% endif %}>TV Series</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="genre">Genre:</label>
+                        <input type="text" id="genre" name="genre" value="{{ media.genre }}" required>
+                    </div>
+                    <div>
+                        <label for="description">Description:</label>
+                        <textarea id="description" name="description" rows="2" required>{{ media.description }}</textarea>
+                    </div>
+
+                    <!-- Form Section 2 -->
+                    <div>
+                        <label for="director">Director:</label>
+                        <input type="text" id="director" name="director" value="{{ media.director }}">
+                    </div>
+                    <div>
+                        <label for="country">Country:</label>
+                        <input type="text" id="country" name="country" value="{{ media.country }}">
+                    </div>
+                    <div>
+                        <label for="releaseYear">Release Year:</label>
+                        <input type="number" id="releaseYear" name="releaseYear" value="{{ media.releaseYear }}">
+                    </div>
+                    <div>
+                        <label for="dateAdded">Date Added:</label>
+                        <input type="date" id="dateAdded" name="dateAdded" value="{{ media.dateAdded }}">
+                    </div>
+
+                    <!-- Form Section 3 -->
+                    <div>
+                        <label for="rating">Rating:</label>
+                        <input type="number" id="rating" name="rating" step="0.1" min="0" max="10" value="{{ media.rating }}">
+                    </div>
+                    <div>
+                        <label for="duration">Duration (minutes):</label>
+                        <input type="number" id="duration" name="duration" value="{{ media.duration }}" required>
+                    </div>
+                    <input type="number" id="page" name="page" value="{{ page }}">
+                </form>
             </div>
         {% endfor %}
 
@@ -178,33 +231,33 @@
             <ul class="pagination-list">
                 {% if page > 1 %}
                     <li class="page-item shaded">
-                        <a class="page-link" href="?page={{ page - 1 }}">&lt; </a>
+                        <a class="page-link" href="/view?page={{ page - 1 }}">&lt; </a>
                     </li>
                 {% endif %}
 
                 {% if total_pages <= 4 %}
                     {% for p in range(1, total_pages + 1) %}
                         <li class="page-item{% if p == page %} active{% endif %}">
-                            <a class="page-link{% if p == page %} active-link{% endif %}" href="?page={{ p }}">{{ p }}</a>
+                            <a class="page-link{% if p == page %} active-link{% endif %}" href="/view?page={{ p }}">{{ p }}</a>
                         </li>
                     {% endfor %}
                 {% else %}
                     {% if page <= 2 %}
                         {% for p in range(1, 5) %}
                             <li class="page-item{% if p == page %} active{% endif %}">
-                                <a class="page-link{% if p == page %} active-link{% endif %}" href="?page={{ p }}">{{ p }}</a>
+                                <a class="page-link{% if p == page %} active-link{% endif %}" href="/view?page={{ p }}">{{ p }}</a>
                             </li>
                         {% endfor %}
                     {% elif page >= total_pages - 1 %}
                         {% for p in range(total_pages - 3, total_pages + 1) %}
                             <li class="page-item{% if p == page %} active{% endif %}">
-                                <a class="page-link{% if p == page %} active-link{% endif %}" href="?page={{ p }}">{{ p }}</a>
+                                <a class="page-link{% if p == page %} active-link{% endif %}" href="/view?page={{ p }}">{{ p }}</a>
                             </li>
                         {% endfor %}
                     {% else %}
                         {% for p in range(page - 1, page + 3) %}
                             <li class="page-item{% if p == page %} active{% endif %}">
-                                <a class="page-link{% if p == page %} active-link{% endif %}" href="?page={{ p }}">{{ p }}</a>
+                                <a class="page-link{% if p == page %} active-link{% endif %}" href="/view?page={{ p }}">{{ p }}</a>
                             </li>
                         {% endfor %}
                     {% endif %}
@@ -212,7 +265,7 @@
 
                 {% if page < total_pages %}
                     <li class="page-item shaded">
-                        <a class="page-link" href="?page={{ page + 1 }}"> &gt;</a>
+                        <a class="page-link" href="/view?page={{ page + 1 }}"> &gt;</a>
                     </li>
                 {% endif %}
             </ul>
@@ -237,7 +290,13 @@
         }
 
         function editMedia(id) {
-            // Implement edit functionality here using the media id
+            const editButton = document.getElementById('btn'+id);
+            const editForm = document.getElementById('editForm'+id);
+
+            editButton.addEventListener('click', () => {
+                // Submit the form when "Edit" is clicked
+                editForm.submit();
+            });
         }
 
         function deleteMedia(id) {
