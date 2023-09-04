@@ -20,9 +20,38 @@ def index():  # put application's code here
     return render_template("index.html")
 
 
-@app.route('/insert')
-def insert():  # put application's code here
+@app.route('/show-insert')
+def show_insert():  # put application's code here
     return render_template("insert.html")
+
+@app.route('/insert-media', methods=['GET', 'POST'])
+def insert():  # put application's code here
+
+    try:
+        date = request.form.get('date_added')
+        media_date = datetime.strptime(date, '%Y-%m-%d')
+
+        new_media = {
+            'title': request.form.get('title', ''),
+            'type': request.form.get('type', ''),
+            'genre': request.form.get('genre', ''),
+            'description': request.form.get('description', ''),
+            'director': request.form.get('director', ''),
+            'cast': request.form.get('cast', ''),
+            'country': request.form.get('country', ''),
+            'release_year': request.form.get('release_year', ''),
+            'rating': request.form.get('rating', ''),
+            'duration': request.form.get('duration', ''),
+            'date_added': media_date
+        }
+
+        amazon_collection.insert_one(new_media)
+
+    except PyMongoError as error:
+        error_msg = "Insert error" + str(error)
+        print(error_msg)
+
+    return render_template("index.html")
 
 
 @app.route('/delete')
@@ -33,23 +62,14 @@ def delete():  # put application's code here
 @app.route('/show-edit', methods=['GET', 'POST'])
 def show_edit():  # put application's code here
 
-    _id = request.form.get('id'),
+    _id = request.form.get('id')
 
-    print(_id)
-
-    media = amazon_collection.find_one({"_id": ObjectId(_id[0])})
-
-    print("My date:")
-    print(media['date_added'])
-    print(type(media['date_added']))
-
-    print("My media:")
-    print(media)
+    media = amazon_collection.find_one({"_id": ObjectId(_id)})
 
     return render_template('edit.html', media_data=media, page=1)
 
 
-@app.route('/editMovie', methods=['GET', 'POST'])
+@app.route('/edit-media', methods=['GET', 'POST'])
 def edit():  # put application's code here
 
     try:
@@ -59,7 +79,7 @@ def edit():  # put application's code here
         date = request.form.get('date_added')
         media_date = datetime.strptime(date, '%Y-%m-%d')
 
-        media_new = {
+        media_update = {
             'title': request.form.get('title', ''),
             'type': request.form.get('type', ''),
             'genre': request.form.get('genre', ''),
@@ -75,9 +95,7 @@ def edit():  # put application's code here
 
         query = {'_id': ObjectId(media_id)}
 
-        print(query)
-
-        amazon_collection.update_one(query, {'$set': media_new})
+        amazon_collection.update_one(query, {'$set': media_update})
 
     except PyMongoError as error:
         error_msg = "Error for update: " + str(error)
