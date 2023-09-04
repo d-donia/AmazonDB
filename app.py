@@ -1,6 +1,11 @@
+from datetime import datetime
+
+from bson import ObjectId
 from flask import Flask, render_template, request, redirect, session
 from pymongo import MongoClient
 import json
+
+from pymongo.errors import PyMongoError
 
 app = Flask(__name__)
 app.secret_key = 'BAD_SECRET_KEY'
@@ -27,31 +32,58 @@ def delete():  # put application's code here
 
 @app.route('/show-edit', methods=['GET', 'POST'])
 def show_edit():  # put application's code here
-    media_data = {
-        'title': request.form.get('title', 'ciao'),
-        'type': request.form.get('type', ''),
-        'genre': request.form.get('genre', ''),
-        'description': request.form.get('description', ''),
-        'director': request.form.get('director', ''),
-        'country': request.form.get('country', ''),
-        'releaseYear': request.form.get('releaseYear', ''),
-        'rating': request.form.get('rating', ''),
-        'duration': request.form.get('duration', ''),
-        'dateAdded': request.form.get('dateAdded', '')
-    }
 
-    page = request.form.get('page', 0)
+    _id = request.form.get('id'),
 
-    print(request.form)
-    return render_template('edit.html', media_data=media_data, page=page)
+    print(_id)
+
+    media = amazon_collection.find_one({"_id": ObjectId(_id[0])})
+
+    print("My date:")
+    print(media['date_added'])
+    print(type(media['date_added']))
+
+    print("My media:")
+    print(media)
+
+    return render_template('edit.html', media_data=media, page=1)
 
 
 @app.route('/editMovie', methods=['GET', 'POST'])
 def edit():  # put application's code here
 
-    page = request.form.get('page', 0)
-    req = {'page': page}
-    return view(medias, req)
+    try:
+
+        media_id = request.form.get('id', '')
+
+        date = request.form.get('date_added')
+        media_date = datetime.strptime(date, '%Y-%m-%d')
+
+        media_new = {
+            'title': request.form.get('title', ''),
+            'type': request.form.get('type', ''),
+            'genre': request.form.get('genre', ''),
+            'description': request.form.get('description', ''),
+            'director': request.form.get('director', ''),
+            'cast': request.form.get('cast', ''),
+            'country': request.form.get('country', ''),
+            'release_year': request.form.get('release_year', ''),
+            'rating': request.form.get('rating', ''),
+            'duration': request.form.get('duration', ''),
+            'date_added': media_date
+        }
+
+        query = {'_id': ObjectId(media_id)}
+
+        print(query)
+
+        amazon_collection.update_one(query, {'$set': media_new})
+
+    except PyMongoError as error:
+        error_msg = "Error for update: " + str(error)
+        print(error_msg)
+
+    return render_template("index.html")
 
 
 @app.route('/search')
@@ -184,6 +216,7 @@ def view(medias=None, page=1, parameters=None, query=0):
 
     # Calculate the total number of pages
     total_pages = len(medias) // per_page + (len(medias) % per_page > 0)
+
 
     return render_template('search-view.html', medias=medias_on_page, page=page, total_pages=total_pages,
                            parameters=parameters, query=query)

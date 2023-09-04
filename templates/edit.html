@@ -80,6 +80,7 @@
         <form action="/editMovie" method="POST">
             <div class="form-field">
                 <label for="title">Title:</label>
+                <input type="text" id="id" name="id" value="{{ media_data['_id'] }}" required hidden>
                 <input type="text" id="title" name="title" value="{{ media_data['title'] }}" required>
             </div>
             <div class="form-field">
@@ -94,12 +95,16 @@
                 <input type="text" id="genre" name="genre" value="{{ media_data['genre'] }}" required>
             </div>
             <div class="form-field">
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" rows="2" required>{{ media_data['description'] }}</textarea>
-            </div>
-            <div class="form-field">
                 <label for="director">Director:</label>
                 <input type="text" id="director" name="director" value="{{ media_data['director'] }}">
+            </div>
+            <div class="form-field">
+                <label for="description">Cast:</label>
+                <textarea id="cast" name="cast" rows="2" required>{{ media_data['cast'] }}</textarea>
+            </div>
+            <div class="form-field">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="2" required>{{ media_data['description'] }}</textarea>
             </div>
             <div class="form-field">
                 <label for="country">Country:</label>
@@ -107,19 +112,19 @@
             </div>
             <div class="form-field">
                 <label for="releaseYear">Release Year:</label>
-                <input type="number" id="releaseYear" name="releaseYear" value="{{ media_data['releaseYear'] }}">
+                <input type="number" id="release_year" name="release_year" value="{{ media_data['release_year'] }}">
             </div>
             <div class="form-field">
                 <label for="rating">Rating:</label>
-                <input type="number" id="rating" name="rating" step="0.1" min="0" max="10" value="{{ media_data['rating'] }}">
+                <input type="text" id="rating" name="rating" value="{{ media_data['rating'] }}">
             </div>
             <div class="form-field">
                 <label for="duration">Duration:</label>
-                <input type="number" id="duration" name="duration" value="{{ media_data['duration'] }}" required>
+                <input type="text" id="duration" name="duration" value="{{ media_data['duration'] }}" required>
             </div>
             <div class="form-field">
-                <label for="dateAdded">Date Added:</label>
-                <input type="date" id="dateAdded" name="dateAdded" value="{{ media_data['dateAdded'] }}">
+                <label for="date_added">Date Added:</label>
+                <input type="date" id="date_added" name="date_added" value="{{ media_data.date_added.strftime('%Y-%m-%d') }}">
             </div>
             <input type="number" id="page" name="page" value="{{ page }}" hidden>
             <!-- Submit button -->
