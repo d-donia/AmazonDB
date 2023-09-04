@@ -1,23 +1,13 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
+from pymongo import MongoClient
+import json
 
 app = Flask(__name__)
+app.secret_key = 'BAD_SECRET_KEY'
 
-
-class Media:
-    def __init__(self, title, type, genre, description, cast, director, country, releaseYear, rating, duration, seasons,
-                 dateAdded):
-        self.title = title
-        self.type = type
-        self.genre = genre
-        self.description = description
-        self.director = director
-        self.country = country
-        self.releaseYear = releaseYear
-        self.rating = rating
-        self.duration = duration
-        self.cast = cast
-        self.seasons = seasons
-        self.dateAdded = dateAdded
+client = MongoClient("mongodb://localhost:27017/")
+db = client['AmazonDB']
+amazon_collection = db['medias']
 
 
 @app.route('/')
@@ -59,73 +49,6 @@ def show_edit():  # put application's code here
 @app.route('/editMovie', methods=['GET', 'POST'])
 def edit():  # put application's code here
 
-    medias = [
-        Media("Movie 1", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 2", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 3", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 4", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 5", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 6", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 7", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 8", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 9", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 10", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 2", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 11", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 12", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 13", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 14", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 15", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 3", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 16", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 17", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 18", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 19", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 20", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 4", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 21", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 22", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 23", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 24", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 25", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 5", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31")
-    ]
     page = request.form.get('page', 0)
     req = {'page': page}
     return view(medias, req)
@@ -136,168 +59,118 @@ def search():  # put application's code here
     return render_template("search.html")
 
 
-@app.route('/search-title')
-def search_title():  # put application's code here
-    medias = [
-        Media("Movie 1", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 2", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 3", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 4", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 5", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 6", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 7", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 8", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 9", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 10", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 2", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 11", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 12", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 13", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 14", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 15", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 3", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 16", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 17", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 18", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 19", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 20", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 4", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 21", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 22", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 23", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 24", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 25", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 5", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31")
-    ]
+@app.route('/execute-search', methods=['GET', 'POST'])
+def execute_search():
+    page = request.args.get('page', 0, type=int)
+    num_query = request.args.get('query', 0, type=int)
 
-    req = {'page': 1}
-    return view(medias=medias, req=req)
+    if page == 0:
+        num_query = request.form.get("query", type=int)
+
+        if num_query == 1:
+            title = request.form.get("title")
+        elif num_query == 2:
+            type = request.form.get("type")
+            genre = request.form.get("genre")
+        elif num_query == 3:
+            type1 = request.form.get("type1")
+            release_year_1 = request.form.get("releaseYear1", type=int)
+            type2 = request.form.get("type2")
+            release_year_2 = request.form.get("releaseYear2", type=int)
+    else:
+        if num_query == 1:
+            title = request.args.get("title")
+        elif num_query == 2:
+            type = request.args.get("type")
+            genre = request.args.get("genre")
+        elif num_query == 3:
+            type1 = request.args.get("type1")
+            release_year_1 = request.args.get("releaseYear1", type=int)
+            type2 = request.args.get("type2")
+            release_year_2 = request.args.get("releaseYear2", type=int)
+        else:
+            num_query = 0
+
+    if num_query == 1:
+        return search_title(page, title)
+    elif num_query == 2:
+        return search_type_genre(page, type, genre)
+    elif num_query == 3:
+        return search_type_release(page, type1, release_year_1, type2, release_year_2)
+    else:
+        num_query = 0
+
+    return None
 
 
-@app.route('/search-type-genre')
-def search_type_genre():  # put application's code here
-    return render_template("search.html")
+@app.route('/search-title', methods=['GET', 'POST'])
+def search_title(page, title):  # put application's code here
+
+    query = {'title': title}
+    medias = list(amazon_collection.find(query))
+
+    parameters = {
+        'title': title
+    }
+
+    return view(medias, page, parameters, query=1)
 
 
-@app.route('/search-type-release-year')
-def search_type_release():  # put application's code here
-    return render_template("search.html")
+@app.route('/search-type-genre', methods=['GET', 'POST'])
+def search_type_genre(page, type, genre):  # put application's code here
+
+    query = {
+        '$and': [
+            {'type': type},
+            {'genre': {'$regex': genre, '$options': 'i'}}
+        ]
+    }
+
+    parameters = {
+        'type': type,
+        'genre': genre,
+    }
+
+    medias = list(amazon_collection.find(query))
+
+    return view(medias, page, parameters, query=2)
+
+
+@app.route('/search-type-release-year', methods=['GET', 'POST'])
+def search_type_release(page, type1, release_year_1, type2, release_year_2):  # put application's code here
+
+    query = {
+        '$or':
+            [
+                {'$and':
+                    [
+                        {'type': type1}, {'release_year': release_year_1}
+                    ]
+                },
+                {'$and':
+                    [
+                        {'type': type2}, {'release_year': release_year_2}
+                    ]
+                },
+            ]
+    }
+
+    medias = list(amazon_collection.find(query))
+
+    parameters = {
+        'type1': type1,
+        'releaseYear1': release_year_1,
+        'type2': type2,
+        'releaseYear2': release_year_2
+    }
+
+    return view(medias, page, parameters, query=3)
 
 
 @app.route('/view')
-def view(medias=None, req=None):
-    # put application's code here
-
-    medias = [
-        Media("Movie 1", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 2", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 3", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 4", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 5", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 6", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 7", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 8", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 9", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 10", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 2", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 11", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 12", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 13", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 14", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 15", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 3", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 16", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 17", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 18", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 19", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 20", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 4", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31"),
-        Media("Movie 21", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 22", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 23", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 24", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("Movie 25", "movie", "Action", "A thrilling action movie.", "Cast", "John Doe", "USA", 2023, 8.5, 120, 0,
-              "2023-08-31"),
-        Media("TV Series Title 5", "tvseries", "Drama", "A captivating drama series.", "Cast", "Jane Smith", "UK", 2022,
-              9.2, 0,
-              5, "2023-08-31")
-    ]
-
-    # Get the current page number from the request's query parameters
-    print(request)
-    if req is None:
-        page = request.args.get('page', type=int, default=1)
-    else:
-        page = int(req['page'])
+def view(medias=None, page=1, parameters=None, query=0):
+    if page == 0:
+        page = 1
 
     # Number of items per page
     per_page = 3  # Adjust this as needed
@@ -312,7 +185,8 @@ def view(medias=None, req=None):
     # Calculate the total number of pages
     total_pages = len(medias) // per_page + (len(medias) % per_page > 0)
 
-    return render_template('view.html', medias=medias_on_page, page=page, total_pages=total_pages)
+    return render_template('search-view.html', medias=medias_on_page, page=page, total_pages=total_pages,
+                           parameters=parameters, query=query)
 
 
 if __name__ == '__main__':
