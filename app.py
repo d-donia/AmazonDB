@@ -12,7 +12,7 @@ app.secret_key = 'BAD_SECRET_KEY'
 
 client = MongoClient("mongodb://localhost:27017/")
 db = client['AmazonDB']
-amazon_collection = db['medias']
+amazon_collection = db['amazondb']
 
 
 @app.route('/')
@@ -39,7 +39,7 @@ def insert():  # put application's code here
             'director': request.form.get('director', ''),
             'cast': request.form.get('cast', ''),
             'country': request.form.get('country', ''),
-            'release_year': request.form.get('release_year', ''),
+            'release_year': request.form.get('release_year', type=int),
             'rating': request.form.get('rating', ''),
             'duration': request.form.get('duration', ''),
             'date_added': media_date
@@ -102,7 +102,7 @@ def edit():  # put application's code here
             'director': request.form.get('director', ''),
             'cast': request.form.get('cast', ''),
             'country': request.form.get('country', ''),
-            'release_year': request.form.get('release_year', ''),
+            'release_year': request.form.get('release_year', type=int),
             'rating': request.form.get('rating', ''),
             'duration': request.form.get('duration', ''),
             'date_added': media_date
