@@ -51,6 +51,43 @@
         .btn-column {
             flex: 0 0 calc(50% - 1rem);
         }
+
+        /* Message box styles */
+        .message-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            z-index: 9999;
+        }
+
+        .message {
+            background-color: #354c69; /* Match the header's background color */
+            color: white; /* Text color */
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .message-text {
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .close {
+            position: absolute;
+            top: 0.2rem;
+            right: 0.2rem;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -70,5 +107,32 @@
             </div>
         </div>
     </div>
+
+    <!-- Message section -->
+    <div class="message-container" id="message-container" style="display: none;">
+        <div class="message">
+            <span class="message-text" id="message-text"></span>
+            <span class="close" onclick="closeMessage()">&#10006;</span>
+        </div>
+    </div>
+
+    <script>
+        // Check if the 'message' variable is not empty
+        var message = "{{ message }}"; // Replace with your actual Flask variable
+
+        if (message) {
+            // Display the message
+            var messageContainer = document.getElementById("message-container");
+            var messageText = document.getElementById("message-text");
+            messageText.innerText = message;
+            messageContainer.style.display = "flex";
+        }
+
+        // Function to close the message
+        function closeMessage() {
+            var messageContainer = document.getElementById("message-container");
+            messageContainer.style.display = "none";
+        }
+    </script>
 </body>
 </html>

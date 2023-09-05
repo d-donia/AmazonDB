@@ -26,7 +26,7 @@ def show_insert():  # put application's code here
 
 @app.route('/insert-media', methods=['GET', 'POST'])
 def insert():  # put application's code here
-
+    #Togliere colonna s1, s2 ecc e colonna numeri
     try:
         date = request.form.get('date_added')
         media_date = datetime.strptime(date, '%Y-%m-%d')
@@ -46,17 +46,21 @@ def insert():  # put application's code here
         }
 
         amazon_collection.insert_one(new_media)
+        msg="Media inserted with success"
+
 
     except PyMongoError as error:
-        error_msg = "Insert error" + str(error)
-        print(error_msg)
+        msg = "Insert error" + str(error)
+        print(msg)
 
-    return render_template("index.html")
+    return render_template("index.html", message=msg)
 
 
-@app.route('/delete')
+@app.route('/delete-media')
 def delete():  # put application's code here
-    return render_template("delete.html")
+    #Da implementare
+    print(request.args.get('mediaId'))
+    return render_template("index.html")
 
 
 @app.route('/show-edit', methods=['GET', 'POST'])
