@@ -132,6 +132,50 @@
         ul {
             list-style: none;
         }
+
+        /* Pop-up Styles */
+        .message-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .message {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 5px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .message-text {
+            margin-bottom: 1rem;
+        }
+
+        .btn-confirm,
+        .btn-cancel {
+            background-color: #00A8E1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.2rem 0.5rem;
+            margin-right: 0.3rem;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #354c69;
+        }
     </style>
 </head>
 <body>
@@ -268,6 +312,18 @@
             </ul>
         </div>
     </div>
+
+    <!-- Confirmation pop-up -->
+    <div class="message-container" id="confirmation-container" style="display: none;">
+        <div class="message">
+            <span class="message-text" id="confirmation-text" data-media-id=""></span>
+            <div>
+                <button class="btn btn-confirm" onclick="confirmDelete()">Yes</button>
+                <button class="btn btn-cancel" onclick="cancelDelete()">No</button>
+            </div>
+
+        </div>
+    </div>
     <script>
         function toggleDetails(button) {
             var card = button.parentNode;
@@ -297,12 +353,44 @@
         }
 
         function deleteMedia(mediaId) {
-        // Construct the URL with the mediaId parameter
-        var deleteUrl = '/delete-media?mediaId=' + mediaId;
+            // Set the media ID in the confirmation pop-up text
+            var confirmationText = document.getElementById("confirmation-text");
+            confirmationText.textContent = "Are you sure you want to delete this media?";
+            confirmationText.setAttribute("data-media-id", mediaId);
 
-        // Redirect to the edit URL
-        window.location.href = deleteUrl;
-    }
+            // Show the confirmation pop-up
+            showConfirmation();
+        }
+
+        // Function to confirm the deletion
+        function confirmDelete() {
+            // Get the media ID from the confirmation pop-up text
+            var mediaId = document.getElementById("confirmation-text").getAttribute("data-media-id");
+
+            // Construct the URL with the mediaId parameter
+            var deleteUrl = '/delete-media?mediaId=' + mediaId;
+
+            // Redirect to the delete URL
+            window.location.href = deleteUrl;
+        }
+
+        // Function to cancel the deletion
+        function cancelDelete() {
+            // Hide the confirmation pop-up
+            hideConfirmation();
+        }
+
+        // Function to show the confirmation pop-up
+        function showConfirmation() {
+            var confirmationContainer = document.getElementById("confirmation-container");
+            confirmationContainer.style.display = "flex";
+        }
+
+        // Function to hide the confirmation pop-up
+        function hideConfirmation() {
+            var confirmationContainer = document.getElementById("confirmation-container");
+            confirmationContainer.style.display = "none";
+        }
     </script>
 </body>
 </html>

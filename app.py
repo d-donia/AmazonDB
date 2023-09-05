@@ -58,9 +58,20 @@ def insert():  # put application's code here
 
 @app.route('/delete-media')
 def delete():  # put application's code here
-    #Da implementare
     print(request.args.get('mediaId'))
-    return render_template("index.html")
+
+    try:
+        id = request.args.get('mediaId')
+
+        query = {'_id': ObjectId(id)}
+        amazon_collection.delete_one(query)
+
+        msg = "Media deleted with success"
+
+    except PyMongoError as error:
+        msg = "Error for deletion: " + str(error)
+
+    return render_template("index.html", message=msg)
 
 
 @app.route('/show-edit', methods=['GET', 'POST'])
