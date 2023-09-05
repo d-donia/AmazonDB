@@ -77,7 +77,7 @@ def delete():  # put application's code here
 @app.route('/show-edit', methods=['GET', 'POST'])
 def show_edit():  # put application's code here
 
-    _id = request.form.get('id')
+    _id = request.args.get('mediaId')
 
     media = amazon_collection.find_one({"_id": ObjectId(_id)})
 
@@ -112,11 +112,13 @@ def edit():  # put application's code here
 
         amazon_collection.update_one(query, {'$set': media_update})
 
-    except PyMongoError as error:
-        error_msg = "Error for update: " + str(error)
-        print(error_msg)
+        msg = 'Media updated with success'
 
-    return render_template("index.html")
+    except PyMongoError as error:
+        msg = "Error for update: " + str(error)
+        print(msg)
+
+    return render_template("index.html", message=msg)
 
 
 @app.route('/search')

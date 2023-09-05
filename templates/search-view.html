@@ -185,87 +185,91 @@
     </div>
     <div class="container">
         <h2>Media List</h2>
-        {% for media in medias %}
-            <div class="card">
-                <div class="card-buttons">
-                    <button class="edit-btn" id="btn{{media.title}}" onclick="editMedia('{{media.title}}')">Edit</button>
-                    <button class="delete-btn" onclick="deleteMedia('{{ media['_id'] }}')">Delete</button>
+        {% if medias %}
+            {% for media in medias %}
+                <div class="card">
+                    <div class="card-buttons">
+                        <button class="edit-btn" id="btn{{media.title}}" onclick="editMedia('{{ media['_id'] }}')">Edit</button>
+                        <button class="delete-btn" onclick="deleteMedia('{{ media['_id'] }}')">Delete</button>
+                    </div>
+                    <h3>{{ media.title }}</h3>
+                    <p><strong>Type:</strong> {{ media.type }}</p>
+                    <p><strong>Genre:</strong> {{ media.genre }}</p>
+                    <p><strong>Director:</strong> {{ media.director }}</p>
+                    <p><strong>Release Year:</strong> {{ media.release_year }}</p>
+                    <button class="arrow-btn" onclick="toggleDetails(this)">
+                        <svg class="arrow" viewBox="0 0 24 24">
+                            <path d="M12 15.41L6.71 10.12a1 1 0 1 0-1.42 1.42l6 6a1 1 0 0 0 1.42 0l6-6a1 1 0 0 0-1.42-1.42L12 15.41z"/>
+                        </svg>
+                        <span class="more-info-text">More info</span>
+                    </button>
+                    <div class="details">
+                        <p><strong>Description:</strong> {{ media.description }}</p>
+                        <p><strong>Cast:</strong> {{ media.cast }}</p>
+                        <p><strong>Country:</strong> {{ media.country }}</p>
+                        <p><strong>Rating:</strong> {{ media.rating }}</p>
+                        <p><strong>Duration:</strong> {{ media.duration }}</p>
+                        <p class="info"><strong>Date Added:</strong> {{ media.date_added.year }}/{{ media.date_added.month }}/{{ media.date_added.day }}</p>
+                    </div>
+                    <form id="editForm{{ media.title }}" action="/show-edit" method="POST" style="display: none">
+                        <!-- Include the input fields for editing -->
+
+                        <!-- Form Section 1 -->
+                        <div>
+                            <input type="text" id="id" name="id" value="{{ media['_id'] }}" required>
+                            <label for="title">Title:</label>
+                            <input type="text" id="title" name="title" value="{{ media.title }}" required>
+                        </div>
+                        <div>
+                            <label for="type">Type:</label>
+                            <select id="type" name="type">
+                                <option value="movie" {% if media.type == "movie" %}selected{% endif %}>Movie</option>
+                                <option value="tvseries" {% if media.type == "tvseries" %}selected{% endif %}>TV Series</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="genre">Genre:</label>
+                            <input type="text" id="genre" name="genre" value="{{ media.genre }}" required>
+                        </div>
+                        <div>
+                            <label for="description">Description:</label>
+                            <textarea id="description" name="description" rows="2" required>{{ media.description }}</textarea>
+                        </div>
+
+                        <!-- Form Section 2 -->
+                        <div>
+                            <label for="director">Director:</label>
+                            <input type="text" id="director" name="director" value="{{ media.director }}">
+                        </div>
+                        <div>
+                            <label for="country">Country:</label>
+                            <input type="text" id="country" name="country" value="{{ media.country }}">
+                        </div>
+                        <div>
+                            <label for="releaseYear">Release Year:</label>
+                            <input type="number" id="releaseYear" name="releaseYear" value="{{ media.release_year }}">
+                        </div>
+                        <div>
+                            <label for="dateAdded">Date Added:</label>
+                            <input type="date" id="dateAdded" name="dateAdded" value="{{ media.date_added}}">
+                        </div>
+
+                        <!-- Form Section 3 -->
+                        <div>
+                            <label for="rating">Rating:</label>
+                            <input type="number" id="rating" name="rating" step="0.1" min="0" max="10" value="{{ media.rating }}">
+                        </div>
+                        <div>
+                            <label for="duration">Duration (minutes):</label>
+                            <input type="number" id="duration" name="duration" value="{{ media.duration }}" required>
+                        </div>
+                        <input type="number" id="page" name="page" value="{{ page }}">
+                    </form>
                 </div>
-                <h3>{{ media.title }}</h3>
-                <p><strong>Type:</strong> {{ media.type }}</p>
-                <p><strong>Genre:</strong> {{ media.genre }}</p>
-                <p><strong>Director:</strong> {{ media.director }}</p>
-                <p><strong>Release Year:</strong> {{ media.release_year }}</p>
-                <button class="arrow-btn" onclick="toggleDetails(this)">
-                    <svg class="arrow" viewBox="0 0 24 24">
-                        <path d="M12 15.41L6.71 10.12a1 1 0 1 0-1.42 1.42l6 6a1 1 0 0 0 1.42 0l6-6a1 1 0 0 0-1.42-1.42L12 15.41z"/>
-                    </svg>
-                    <span class="more-info-text">More info</span>
-                </button>
-                <div class="details">
-                    <p><strong>Description:</strong> {{ media.description }}</p>
-                    <p><strong>Cast:</strong> {{ media.cast }}</p>
-                    <p><strong>Country:</strong> {{ media.country }}</p>
-                    <p><strong>Rating:</strong> {{ media.rating }}</p>
-                    <p><strong>Duration:</strong> {{ media.duration }}</p>
-                    <p class="info"><strong>Date Added:</strong> {{ media.date_added.year }}/{{ media.date_added.month }}/{{ media.date_added.day }}</p>
-                </div>
-                <form id="editForm{{ media.title }}" action="/show-edit" method="POST" style="display: none">
-                    <!-- Include the input fields for editing -->
-
-                    <!-- Form Section 1 -->
-                    <div>
-                        <input type="text" id="id" name="id" value="{{ media['_id'] }}" required>
-                        <label for="title">Title:</label>
-                        <input type="text" id="title" name="title" value="{{ media.title }}" required>
-                    </div>
-                    <div>
-                        <label for="type">Type:</label>
-                        <select id="type" name="type">
-                            <option value="movie" {% if media.type == "movie" %}selected{% endif %}>Movie</option>
-                            <option value="tvseries" {% if media.type == "tvseries" %}selected{% endif %}>TV Series</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="genre">Genre:</label>
-                        <input type="text" id="genre" name="genre" value="{{ media.genre }}" required>
-                    </div>
-                    <div>
-                        <label for="description">Description:</label>
-                        <textarea id="description" name="description" rows="2" required>{{ media.description }}</textarea>
-                    </div>
-
-                    <!-- Form Section 2 -->
-                    <div>
-                        <label for="director">Director:</label>
-                        <input type="text" id="director" name="director" value="{{ media.director }}">
-                    </div>
-                    <div>
-                        <label for="country">Country:</label>
-                        <input type="text" id="country" name="country" value="{{ media.country }}">
-                    </div>
-                    <div>
-                        <label for="releaseYear">Release Year:</label>
-                        <input type="number" id="releaseYear" name="releaseYear" value="{{ media.release_year }}">
-                    </div>
-                    <div>
-                        <label for="dateAdded">Date Added:</label>
-                        <input type="date" id="dateAdded" name="dateAdded" value="{{ media.date_added}}">
-                    </div>
-
-                    <!-- Form Section 3 -->
-                    <div>
-                        <label for="rating">Rating:</label>
-                        <input type="number" id="rating" name="rating" step="0.1" min="0" max="10" value="{{ media.rating }}">
-                    </div>
-                    <div>
-                        <label for="duration">Duration (minutes):</label>
-                        <input type="number" id="duration" name="duration" value="{{ media.duration }}" required>
-                    </div>
-                    <input type="number" id="page" name="page" value="{{ page }}">
-                </form>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+        <p>No media found</p>
+        {% endif %}
 
         <!-- Pagination -->
          <div class="pagination">
@@ -343,20 +347,18 @@
         }
 
         function editMedia(id) {
-            const editButton = document.getElementById('btn'+id);
-            const editForm = document.getElementById('editForm'+id);
+            // Construct the URL with the mediaId parameter
+            var editUrl = '/show-edit?mediaId=' + id;
 
-            editButton.addEventListener('click', () => {
-                // Submit the form when "Edit" is clicked
-                editForm.submit();
-            });
+            // Redirect to the delete URL
+            window.location.href = editUrl;
         }
 
-        function deleteMedia(mediaId) {
+        function deleteMedia(id) {
             // Set the media ID in the confirmation pop-up text
             var confirmationText = document.getElementById("confirmation-text");
             confirmationText.textContent = "Are you sure you want to delete this media?";
-            confirmationText.setAttribute("data-media-id", mediaId);
+            confirmationText.setAttribute("data-media-id", id);
 
             // Show the confirmation pop-up
             showConfirmation();
