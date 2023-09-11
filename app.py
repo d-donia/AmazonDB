@@ -16,17 +16,16 @@ amazon_collection = db['amazondb']
 
 
 @app.route('/')
-def index():  # put application's code here
+def index():
     return render_template("index.html")
 
 
 @app.route('/show-insert')
-def show_insert():  # put application's code here
+def show_insert():
     return render_template("insert.html")
 
 @app.route('/insert-media', methods=['GET', 'POST'])
-def insert():  # put application's code here
-    #Togliere colonna s1, s2 ecc e colonna numeri
+def insert():
     try:
         date = request.form.get('date_added')
         media_date = datetime.strptime(date, '%Y-%m-%d')
@@ -57,7 +56,7 @@ def insert():  # put application's code here
 
 
 @app.route('/delete-media')
-def delete():  # put application's code here
+def delete():
     print(request.args.get('mediaId'))
 
     try:
@@ -75,7 +74,7 @@ def delete():  # put application's code here
 
 
 @app.route('/show-edit', methods=['GET', 'POST'])
-def show_edit():  # put application's code here
+def show_edit():
 
     _id = request.args.get('mediaId')
 
@@ -85,7 +84,7 @@ def show_edit():  # put application's code here
 
 
 @app.route('/edit-media', methods=['GET', 'POST'])
-def edit():  # put application's code here
+def edit():
 
     try:
 
@@ -122,7 +121,7 @@ def edit():  # put application's code here
 
 
 @app.route('/search')
-def search():  # put application's code here
+def search():
     return render_template("search.html")
 
 
@@ -171,7 +170,7 @@ def execute_search():
 
 
 @app.route('/search-title', methods=['GET', 'POST'])
-def search_title(page, title):  # put application's code here
+def search_title(page, title):
 
     query = {'title': title}
     medias = list(amazon_collection.find(query))
@@ -184,7 +183,7 @@ def search_title(page, title):  # put application's code here
 
 
 @app.route('/search-type-genre', methods=['GET', 'POST'])
-def search_type_genre(page, type, genre):  # put application's code here
+def search_type_genre(page, type, genre):
 
     query = {
         '$and': [
@@ -204,7 +203,7 @@ def search_type_genre(page, type, genre):  # put application's code here
 
 
 @app.route('/search-type-release-year', methods=['GET', 'POST'])
-def search_type_release(page, type1, release_year_1, type2, release_year_2):  # put application's code here
+def search_type_release(page, type1, release_year_1, type2, release_year_2):
 
     query = {
         '$or':
@@ -240,7 +239,7 @@ def view(medias=None, page=1, parameters=None, query=0):
         page = 1
 
     # Number of items per page
-    per_page = 3  # Adjust this as needed
+    per_page = 3
 
     # Calculate the index range for the current page
     start_idx = (page - 1) * per_page
